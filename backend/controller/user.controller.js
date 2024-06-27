@@ -1,6 +1,10 @@
 import User from "../models/user.model.js";
 // import bcrypt from "bcryptjs";
 
+import jwt from "jsonwebtoken";
+
+const SECRET_KEY = process.env.SECRET_KEY;
+
 const signUp = async (req, res, next) => {
   try {
     let { email, password } = req.body;
@@ -43,7 +47,10 @@ const login = async (req, res, next) => {
     }
 
     if (await user.matchPassword(password)) {
-      res.send({ message: "Login Successful" });
+      const token = jwt.sign({ id: user._id, email: user.email }, SECRET_KEY, {
+        expiresIn: "1hr",
+      });
+      res.send({ message: "Login Successful", token });
     } else {
       let err = new Error("Invalid Password");
       err.status = 400;

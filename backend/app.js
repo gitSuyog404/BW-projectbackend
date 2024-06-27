@@ -1,4 +1,5 @@
 import express from "express";
+import dotenv from "dotenv";
 import logger from "./middleware/logger.js";
 import notFoundHandler from "./middleware/notFoundHandler.js";
 import errorHandler from "./middleware/errorHandler.js";
@@ -7,6 +8,8 @@ import errorHandler from "./middleware/errorHandler.js";
 import userRouter from "./routes/user.router.js";
 
 // Initialize express app
+
+dotenv.config();
 
 const app = express();
 
