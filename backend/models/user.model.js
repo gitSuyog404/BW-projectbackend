@@ -26,6 +26,12 @@ const userSchema = new mongoose.Schema({
   },
 });
 
+// Matching the password after the email is verified
+
+userSchema.methods.matchPassword = async function (password) {
+  return await bcrypt.compare(password, this.password);
+};
+
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) {
     next();
@@ -39,3 +45,6 @@ userSchema.pre("save", async function (next) {
 
 const User = mongoose.model("User", userSchema);
 export default User;
+
+// node ma jsonwebtoken vanne package install garera
+// ek choti login ra signup ma web token pathauna try garne
