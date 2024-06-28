@@ -1,4 +1,5 @@
 import User from "../models/user.model.js";
+import createToken from "../utils/token.utils.js";
 // import bcrypt from "bcryptjs";
 
 const signUp = async (req, res, next) => {
@@ -20,6 +21,9 @@ const signUp = async (req, res, next) => {
 
     // let user = await User.create({ ...req.body, password: hashedPassword });
     let user = await User.create(req.body);
+    // signup garne bittikai automatic login hune ho vane chai signup mai token banaunu parxa
+    // if signup garera feri login ma redirect garxa vane chai signup ma token banaunu pardaina
+    createToken(res, user._id);
     res.send({
       message: "User registered successfully!",
       user: {
@@ -42,7 +46,10 @@ const login = async (req, res, next) => {
       throw err;
     }
 
+    // hamile esari token use garda ni hunxa
+    // arko way chai cookie ma set garne ho
     if (await user.matchPassword(password)) {
+      let token = createToken(res, user._id);
       res.send({ message: "Login Successful" });
     } else {
       let err = new Error("Invalid Password");
@@ -54,4 +61,9 @@ const login = async (req, res, next) => {
   }
 };
 
-export { signUp, login };
+const logout = async (req, res) => {
+  res.clearCookie("jwt");
+  res.send({ message: "Logout success" });
+};
+
+export { signUp, login, logout };
