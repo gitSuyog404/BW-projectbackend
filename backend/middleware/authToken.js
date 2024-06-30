@@ -58,4 +58,14 @@ const checkAuth = asyncHandler(async (req, res, next) => {
   }
 });
 
-export default checkAuth;
+const checkAdmin = asyncHandler(async (req, res, next) => {
+  if (req.user && req.user.isAdmin) {
+    next();
+  } else {
+    let err = new Error("Access Denied");
+    err.status = 403;
+    throw err;
+  }
+});
+
+export { checkAuth, checkAdmin };
