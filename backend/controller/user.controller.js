@@ -67,3 +67,5 @@ const logout = async (req, res) => {
 };
 
 export { signUp, login, logout };
+
+// create a middlware to validate the token
