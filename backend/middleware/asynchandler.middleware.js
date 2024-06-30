@@ -3,3 +3,5 @@ const asyncHandler = (fn) => (req, res, next) => {
 };
 
 export { asyncHandler };
+
+// checkadmin vanne function banayera logged in user admin ho ki haina vanera check garera balla yo getusers chalauna paune banaune
