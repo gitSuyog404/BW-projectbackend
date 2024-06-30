@@ -1,4 +1,5 @@
 import express from "express";
+import cookieParser from "cookie-parser";
 import logger from "./middleware/logger.js";
 import notFoundHandler from "./middleware/notFoundHandler.js";
 import errorHandler from "./middleware/errorHandler.js";
@@ -13,6 +14,7 @@ const app = express();
 // middleware
 
 app.use(express.json());
+app.use(cookieParser());
 
 app.use("/api/v1/users", userRouter);
 

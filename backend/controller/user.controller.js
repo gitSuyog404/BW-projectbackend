@@ -66,6 +66,11 @@ const logout = async (req, res) => {
   res.send({ message: "Logout success" });
 };
 
-export { signUp, login, logout };
+const getUsers = async (req, res) => {
+  let users = await User.find({}).select("-password");
+  res.send(users);
+};
+
+export { signUp, login, logout, getUsers };
 
 // create a middlware to validate the token
