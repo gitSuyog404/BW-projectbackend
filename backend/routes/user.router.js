@@ -5,6 +5,7 @@ import {
   logout,
   getUsers,
   userProfile,
+  updateProfile,
 } from "../controller/user.controller.js";
 import { checkAuth, checkAdmin } from "../middleware/authToken.js";
 

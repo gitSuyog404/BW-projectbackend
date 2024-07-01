@@ -109,9 +109,68 @@ const userProfile = asyncHandler(async (req, res) => {
   res.send(req.user);
 });
 
-const updateProfile = asyncHandler(async (req, res) => {});
+const updateProfile = asyncHandler(async (req, res, next) => {
+  try {
+    let user = await User.findById(req.user._id);
+    if (!user) {
+      throw new ApiError(404, "User not found");
+    }
 
-export { signUp, login, logout, getUsers, userProfile };
+    user.name = req.body.name || user.name;
+    user.email = req.body.email || user.email;
+
+    if (req.body.password) {
+      user.password = req.body.password;
+    }
+
+    if (req.body.isAdmin !== undefined) {
+      throw new ApiError(400, "You cannot update this field");
+    }
+
+    await user.save();
+
+    res.send({
+      message: "The profile has been updated successfully",
+
+      user: {
+        name: user.name,
+        email: user.email,
+      },
+    });
+  } catch (e) {
+    next(e);
+  }
+});
+
+const updateUser = asyncHandler(async (req, res, next) => {
+  try {
+    let user = await User.findById(req.params.id);
+
+    if (!user) {
+      throw new ApiError(404, "User not found");
+    }
+
+    user.name = req.body.name || user.name;
+    user.email = req.body.email || user.email;
+    user.isAdmin =
+      req.body.isAdmin !== undefined ? req.body.isAdmin : user.isAdmin;
+
+    await user.save();
+
+    res.send({
+      message: "User updated successfully",
+      user: {
+        name: user.name,
+        email: user.email,
+        isAdmin: user.isAdmin,
+      },
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
+export { signUp, login, logout, getUsers, userProfile, updateProfile };
 
 // create a middlware to validate the token
 
