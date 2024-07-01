@@ -1,6 +1,8 @@
 import User from "../models/user.model.js";
 import createToken from "../utils/token.utils.js";
 // import bcrypt from "bcryptjs";
+import ApiError from "../utils/apiError.js";
+import { asyncHandler } from "../middleware/asynchandler.middleware.js";
 
 const signUp = async (req, res, next) => {
   try {
@@ -11,9 +13,10 @@ const signUp = async (req, res, next) => {
     // since key ra value same vako vayera yo email:email ko satta siddhai email lekhna milxa
 
     if (userExists) {
-      let err = new Error(`${email} is already registered`);
-      err.status = 400;
-      throw err;
+      throw new ApiError(400, `${email} is already registered`);
+      // let err = new Error(`${email} is already registered`);
+      // err.status = 400;
+      // throw err;
     }
 
     // let salt = await bcrypt.genSalt(10);
@@ -41,9 +44,10 @@ const login = async (req, res, next) => {
     let { email, password } = req.body;
     let user = await User.findOne({ email });
     if (!user) {
-      let err = new Error("User not registered");
-      err.status = 400;
-      throw err;
+      throw new ApiError(400, "User not registered");
+      //   let err = new Error("User not registered");
+      //   err.status = 400;
+      //   throw err;
     }
 
     // hamile esari token use garda ni hunxa
@@ -52,9 +56,10 @@ const login = async (req, res, next) => {
       let token = createToken(res, user._id);
       res.send({ message: "Login Successful" });
     } else {
-      let err = new Error("Invalid Password");
-      err.status = 400;
-      throw err;
+      throw new ApiError(400, "Invalid Password");
+      // let err = new Error("Invalid Password");
+      // err.status = 400;
+      // throw err;
     }
   } catch (err) {
     next(err);
@@ -71,6 +76,46 @@ const getUsers = async (req, res) => {
   res.send(users);
 };
 
-export { signUp, login, logout, getUsers };
+// const userProfile = asyncHandler(async (req, res) => {
+//   try {
+//     let user = await User.findById(req.user._id).select("-password");
+//     if (!user) {
+//       throw new ApiError(404,"User not found")
+//       // let err = new Error("User not found");
+//       // err.status = 404;
+//       // throw err;
+//     }
+//     res.send(user);
+//   } catch (error) {
+//     next(error);
+//   }
+// });
+
+// const updateProfile = async (req, res) => {
+//   try{
+//     let user = await User.findById(req.user._id);
+//     if(!user){
+//       throw new ApiError(404,"User not found")
+//     //   let err = new Error("User not found");
+//     //   err.status = 404;
+//     //   throw err;
+//     }
+//   }
+// };
+
+// Sir ko code
+
+const userProfile = asyncHandler(async (req, res) => {
+  res.send(req.user);
+});
+
+const updateProfile = asyncHandler(async (req, res) => {});
+
+export { signUp, login, logout, getUsers, userProfile };
 
 // create a middlware to validate the token
+
+// Assignment: updateProfile, updateUser,deleteUser
+// updateProfile garda password update garna paiyo but isAdmin change garna payena
+// deleteUser garne ho vane admin user chai delete hunu vayena
+// updateUser garda admin le user lai update garna milyo  ani update user garda admin le password update garna mildaina but isadmin chai change garna paiyo

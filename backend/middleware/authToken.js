@@ -36,14 +36,16 @@
 import jwt from "jsonwebtoken";
 import User from "../models/user.model.js";
 import { asyncHandler } from "./asynchandler.middleware.js";
+import ApiError from "../utils/apiError.js";
 
 const checkAuth = asyncHandler(async (req, res, next) => {
   let token = req.cookies.jwt;
 
   if (!token) {
-    let err = new Error("You must be logged in!");
-    err.status = 401;
-    throw err;
+    throw new ApiError(401, "You must be logged in!");
+    // let err = new Error("You must be logged in!");
+    // err.status = 401;
+    // throw err;
   }
 
   try {
@@ -52,9 +54,10 @@ const checkAuth = asyncHandler(async (req, res, next) => {
     req.user = user;
     next();
   } catch (e) {
-    let err = new Error("Invalid token");
-    err.status = 401;
-    throw err;
+    throw new ApiError(401, "Invalid Token");
+    // let err = new Error("Invalid token");
+    // err.status = 401;
+    // throw err;
   }
 });
 
@@ -62,10 +65,26 @@ const checkAdmin = asyncHandler(async (req, res, next) => {
   if (req.user && req.user.isAdmin) {
     next();
   } else {
-    let err = new Error("Access Denied");
-    err.status = 403;
-    throw err;
+    throw new ApiError(403, "Access Denied");
+    // let err = new Error("Access Denied");
+    // err.status = 403;
+    // throw err;
   }
 });
 
 export { checkAuth, checkAdmin };
+
+// sir ko code
+
+// const checkAdmin = async (req, res, next) => {
+//   const isAdmin = req.user?.isAdmin; // ? vaneko chai you value undefined/null huna sakxa vaneko ho
+//   if (isAdmin) {
+//     next();
+//   } else {
+//     let err = new Error("You are not authorized to perform this operation");
+//     err.status = 403;
+//     throw err;
+//   }
+// };
+
+// export { checkAuth, checkAdmin };
