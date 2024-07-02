@@ -78,6 +78,7 @@ export { checkAuth, checkAdmin };
 
 // const checkAdmin = async (req, res, next) => {
 //   const isAdmin = req.user?.isAdmin; // ? vaneko chai you value undefined/null huna sakxa vaneko ho
+// ? value null vayo vane agadi ko value run gardidaina so issue aunu bata prevent vayo
 //   if (isAdmin) {
 //     next();
 //   } else {

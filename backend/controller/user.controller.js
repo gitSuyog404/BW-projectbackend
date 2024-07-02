@@ -150,10 +150,15 @@ const updateUser = asyncHandler(async (req, res, next) => {
       throw new ApiError(404, "User not found");
     }
 
+    if (req.body.password) {
+      throw new ApiError(401, "You cannot update the password field");
+    }
+
     user.name = req.body.name || user.name;
     user.email = req.body.email || user.email;
     user.isAdmin =
       req.body.isAdmin !== undefined ? req.body.isAdmin : user.isAdmin;
+    // or user.isAdmin = Boolean(req.body.isAdmin);
 
     await user.save();
 
@@ -183,6 +188,7 @@ const deleteUser = asyncHandler(async (req, res, next) => {
     }
 
     await user.remove();
+    // or await User.findByIdAndDelete(id);
     res.send({ message: "User deleted successfully" });
   } catch (err) {
     next(err);
@@ -206,3 +212,5 @@ export {
 // updateProfile garda password update garna paiyo but isAdmin change garna payena
 // deleteUser garne ho vane admin user chai delete hunu vayena
 // updateUser garda admin le user lai update garna milyo  ani update user garda admin le password update garna mildaina but isadmin chai change garna paiyo
+
+// sir ko code
