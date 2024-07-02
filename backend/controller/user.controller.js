@@ -170,7 +170,35 @@ const updateUser = asyncHandler(async (req, res, next) => {
   }
 });
 
-export { signUp, login, logout, getUsers, userProfile, updateProfile };
+const deleteUser = asyncHandler(async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.id);
+
+    if (!user) {
+      throw new ApiError(404, "User not found");
+    }
+
+    if (user.isAdmin) {
+      throw new ApiError("403", "You cannot delete an admin");
+    }
+
+    await user.remove();
+    res.send({ message: "User deleted successfully" });
+  } catch (err) {
+    next(err);
+  }
+});
+
+export {
+  signUp,
+  login,
+  logout,
+  getUsers,
+  userProfile,
+  updateProfile,
+  updateUser,
+  deleteUser,
+};
 
 // create a middlware to validate the token
 
