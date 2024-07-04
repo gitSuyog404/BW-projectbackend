@@ -1,30 +1,33 @@
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 
-const userSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-    minlength: 3,
-  },
+const userSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+      minlength: 3,
+    },
 
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-  },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+    },
 
-  password: {
-    type: String,
-    required: true,
-    minlength: 6,
-  },
+    password: {
+      type: String,
+      required: true,
+      minlength: 6,
+    },
 
-  isAdmin: {
-    type: Boolean,
-    default: false,
+    isAdmin: {
+      type: Boolean,
+      default: false,
+    },
   },
-});
+  { timestamps: true }
+);
 
 // Matching the password after the email is verified
 
