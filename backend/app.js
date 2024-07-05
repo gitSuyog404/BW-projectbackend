@@ -6,6 +6,7 @@ import errorHandler from "./middleware/errorHandler.js";
 
 // router imports
 import userRouter from "./routes/user.router.js";
+import productRouter from "./routes/product.router.js";
 
 // Initialize express app
 
@@ -17,6 +18,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use("/api/v1/users", userRouter);
+app.use("/api/v1/products", productRouter);
 
 // Implement middleware in this code
 app.use(logger);
