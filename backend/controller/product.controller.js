@@ -161,4 +161,48 @@ const addProduct = asyncHandler(async (req, res) => {
   res.send({ message: "Product created successfully", product });
 });
 
-export { getProducts, getProductById, getTopProducts, addProduct };
+// @desc update Products
+// @route /api/v1/updateproduct
+// @access private/admin
+
+const updateProduct = asyncHandler(async (req, res) => {
+  const id = req.params.id;
+  const product = await Product.findById(id);
+
+  if (product) {
+    Object.assign(product, { ...req.body });
+
+    const updatedProduct = await product.save();
+    res.send({
+      message: "Product updated successfully",
+      product: updatedProduct,
+    });
+  } else {
+    throw new ApiError(404, "Product not found");
+  }
+});
+
+// @desc delete Products
+// @route /api/v1/products/delete/:id
+// @access private/admin
+
+const deleteProduct = asyncHandler(async (req, res) => {
+  const id = req.params.id;
+
+  const removed = await Product.findByIdAndDelete(id);
+
+  if (removed) {
+    res.send({ message: "Product deleted successfully" });
+  } else {
+    throw new ApiError(404, "Product not found");
+  }
+});
+
+export {
+  getProducts,
+  getProductById,
+  getTopProducts,
+  addProduct,
+  updateProduct,
+  deleteProduct,
+};

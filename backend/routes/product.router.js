@@ -30,8 +30,12 @@ import {
   getProductById,
   getTopProducts,
   addProduct,
+  updateProduct,
+  deleteProduct,
 } from "../controller/product.controller.js";
 import { checkAuth, checkAdmin } from "../middleware/authToken.js";
+
+import { addReview } from "../controller/review.controller.js";
 
 // new syntax
 // if eutai path xa vane
@@ -40,6 +44,10 @@ const router = express.Router();
 
 router.route("/").get(getProducts).post(checkAuth, checkAdmin, addProduct);
 router.route("/:id").get(getProductById);
+router.route("/topproducts").get(getTopProducts);
+router.route("/update/:id").post(checkAuth, checkAdmin, updateProduct);
+router.route("/delete/:id").delete(checkAuth, checkAdmin, deleteProduct);
+router.route("/:productId/addreview").post(checkAuth, addReview);
 
 export default router;
 
