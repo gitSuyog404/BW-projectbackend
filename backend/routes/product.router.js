@@ -32,10 +32,9 @@ import {
   addProduct,
   updateProduct,
   deleteProduct,
+  addReview,
 } from "../controller/product.controller.js";
 import { checkAuth, checkAdmin } from "../middleware/authToken.js";
-
-import { addReview } from "../controller/review.controller.js";
 
 // new syntax
 // if eutai path xa vane

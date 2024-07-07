@@ -157,6 +157,7 @@ const getTopProducts = asyncHandler(async (req, res) => {
 // @route /api/v1/addproduct
 // @access private/admin
 const addProduct = asyncHandler(async (req, res) => {
+  // count in stock pani product banauda add garne
   const product = await Product.create({ ...req.body, user: req.user._id });
   res.send({ message: "Product created successfully", product });
 });
@@ -166,11 +167,25 @@ const addProduct = asyncHandler(async (req, res) => {
 // @access private/admin
 
 const updateProduct = asyncHandler(async (req, res) => {
+  // filter garne kura jaile params bata linxa
   const id = req.params.id;
   const product = await Product.findById(id);
 
   if (product) {
     Object.assign(product, { ...req.body });
+    /*
+    OR
+    product.name = req.body.name || product.name;
+    product.description = req.body.description || product.description;
+    product.price = req.body.price  || product.price;
+    product.countInStock = req.body.countInStock || product.countInStock;
+    product.image = req.body.image || product.image;
+    product.brand = req.body.brand || product.brand;
+    product.category = req.body.category || product.category
+
+
+
+    */
 
     const updatedProduct = await product.save();
     res.send({
@@ -198,6 +213,70 @@ const deleteProduct = asyncHandler(async (req, res) => {
   }
 });
 
+const addReview = asyncHandler(async (req, res) => {
+  const productId = req.params.productId;
+
+  const newReview = {
+    ...req.body,
+    name: req.user.name,
+    user: req.user._id,
+  };
+
+  const product = await Product.findById(productId);
+
+  if (!product) {
+    throw new ApiError(404, "Product not found");
+  }
+
+  let reviewAdded = product.reviews.find(
+    (review) => review.user.toString() === req.user._id.toString()
+  );
+
+  if (reviewAdded) {
+    throw new ApiError(400, "Review already added");
+  }
+  product.reviews.push(newReview);
+  product.numReviews = product.reviews.length;
+
+  const totalRating = product.reviews.reduce(
+    (acc, review) => acc + review.rating,
+    0
+  );
+  // yo average rating lai decimal mai pathaune
+  product.rating = (totalRating / product.reviews.length).toFixed(2);
+
+  await product.save();
+
+  res
+    .status(201)
+    .json({ message: "Review added successfully", review: newReview });
+});
+
+// Sir ko code
+// To add user review
+// const addUserReview = asyncHandler(async (req, res) => {
+//   let id = req.params.id;
+//   const product = await Product.findById(id);
+//   if (!product) {
+//     throw new ApiError(404, "Product not found");
+//   }
+
+//   let { rating, comment } = req.body;
+// To check whether the user has already added the review or not
+// let reviewAdded = product.reviews.find(
+//   (review)=>review.user.toString() === req.user._id.toString()
+// )
+//   product.reviews.push({
+//     name: req.user.name,
+//     rating,
+//     comment,
+//     user: req.user._id,
+//   });
+
+//   await product.save();
+//   res.send({ message: "Product review added!" });
+// });
+
 export {
   getProducts,
   getProductById,
@@ -205,4 +284,5 @@ export {
   addProduct,
   updateProduct,
   deleteProduct,
+  addReview,
 };
