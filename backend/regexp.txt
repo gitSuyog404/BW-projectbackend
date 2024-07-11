@@ -1,0 +1,26 @@
+For email:
+^([a-zA-Z]{3,15})@([a-z]{3,8})\.([a-z]{2,5})(\.[a-z]{2,5})?$
+
+
+For password:
+/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&\*])[A-Za-z\d!@#$%^&\*]{8,}$/;
+
+
+
+length: at least 8 characters
+uppercase letter : at least one uppercase letter
+lowercase letter : at least one lowercase letter
+digit: at least one digit
+Special character : at least one special character  
+
+(?=.) vaneko chai dont move past this without the condition being met 
+
+(?=) positive lookahead
+(?!) negative lookahead
+
+sir ko code :
+For email : 
+/^([a-z][a-z0-9_\.]+[a-z0-9])@([a-z0-9]{2,20})\.([a-z]{2,5})(\.[a-z]{2,5})?$/
+
+
+For password:

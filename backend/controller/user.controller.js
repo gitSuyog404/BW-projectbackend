@@ -3,6 +3,7 @@ import createToken from "../utils/token.utils.js";
 // import bcrypt from "bcryptjs";
 import ApiError from "../utils/apiError.js";
 import { asyncHandler } from "../middleware/asynchandler.middleware.js";
+import { isEmail, isPassword } from "../utils/validator.js";
 
 const signUp = async (req, res, next) => {
   try {
@@ -23,6 +24,8 @@ const signUp = async (req, res, next) => {
     // let hashedPassword = await bcrypt.hash(password, salt);
 
     // let user = await User.create({ ...req.body, password: hashedPassword });
+    if (!isEmail(email)) throw new ApiError(400, "Invalid Email");
+    if (!isPassword(password)) throw new ApiError(400, "Invalid password");
     let user = await User.create(req.body);
     // signup garne bittikai automatic login hune ho vane chai signup mai token banaunu parxa
     // if signup garera feri login ma redirect garxa vane chai signup ma token banaunu pardaina

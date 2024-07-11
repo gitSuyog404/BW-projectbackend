@@ -121,6 +121,7 @@
 import { asyncHandler } from "../middleware/asynchandler.middleware.js";
 import Product from "../models/product.model.js";
 import ApiError from "../utils/apiError.js";
+import { isPrice, isProduct } from "../utils/validator.js";
 
 // @desc get all products
 // @route /api/v1/products
@@ -157,7 +158,16 @@ const getTopProducts = asyncHandler(async (req, res) => {
 // @route /api/v1/addproduct
 // @access private/admin
 const addProduct = asyncHandler(async (req, res) => {
+  let { name, price } = req.body;
   // count in stock pani product banauda add garne
+  // for price with 2 decimal places
+  if (!isPrice(price)) {
+    throw new ApiError(400, "Invalid Password");
+  }
+
+  if (!isProduct(name)) {
+    throw new ApiError(400, "Invalid Product Name");
+  }
   const product = await Product.create({ ...req.body, user: req.user._id });
   res.send({ message: "Product created successfully", product });
 });
